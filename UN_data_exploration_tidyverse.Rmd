@@ -112,19 +112,43 @@ ggplot(gdp_2014, aes(x=GDP_Per_Capita)) +
 
 ```{r}
 gdp_2014 %>% 
-  group_by(C) %>% 
-  filter(total_used == min(total_used)) %>% 
-  head(5)
+ arrange(desc(GDP_Per_Capita)) %>% 
+  head()
+```
+#
+```{r}
+gdp_2014 %>% 
+ arrange(desc(GDP_Per_Capita)) %>% 
+  tail()
+```
+
+#9 Now, return to the full dataset, gdp_df. Pivot the data for 1990 and 2018 (using the pandas .pivot_wider() method or another method) so that each row corresponds to a country, each column corresponds to a year, and the values in the table give the GDP_Per_Capita amount. Drop any rows that are missing values for either 1990 or 2018. Save the result to a dataframe named gdp_pivoted.
+
+```{r}
+gdp_pivoted <- gdp_df %>%
+  filter(Year == 1990 | Year == 2018) %>% 
+  pivot_wider(names_from=Year, values_from = GDP_Per_Capita) %>%
+  drop_na
+gdp_pivoted
 ```
 
 
-Now, return to the full dataset, gdp_df. Pivot the data for 1990 and 2018 (using the pandas .pivot_wider() method or another method) so that each row corresponds to a country, each column corresponds to a year, and the values in the table give the GDP_Per_Capita amount. Drop any rows that are missing values for either 1990 or 2018. Save the result to a dataframe named gdp_pivoted.
+#10 Create a new column in gdp_pivoted named Percent_Change. This column should contain the percent change in GDP_Per_Capita from 1990 to 2018. Hint: Percent change is calculated as 100\*(New Value - Old Value) / Old Value.
 
-Create a new column in gdp_pivoted named Percent_Change. This column should contain the percent change in GDP_Per_Capita from 1990 to 2018. Hint: Percent change is calculated as 100\*(New Value - Old Value) / Old Value.
+```{r}
+gdp_pivoted <- gdp_pivoted %>%
+  mutate(Percent_Change = ((`2018`-`1990`)/`1990`) * 100)
+gdp_pivoted
+```
 
-How many countries experienced a negative percent change in GDP per capita from 1990 to 2018?
+#11 How many countries experienced a negative percent change in GDP per capita from 1990 to 2018?
 
-Which country had the highest % change in GDP per capita? Create a line plot showing these country's GDP per capita for all years for which you have data. Put both line charts on the same plot.
+```{r}
+gdp_pivoted %>% 
+  filter(Percent_Change < 0)
+```
+
+#12 Which country had the highest % change in GDP per capita? Create a line plot showing these country's GDP per capita for all years for which you have data. Put both line charts on the same plot.
 
 Read in continents.csv contained in the data folder into a new dataframe called continents. We will be using this dataframe to add a new column to our dataset.
 
