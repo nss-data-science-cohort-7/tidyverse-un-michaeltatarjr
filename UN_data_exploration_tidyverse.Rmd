@@ -109,13 +109,13 @@ ggplot(gdp_2014, aes(x=GDP_Per_Capita)) +
 ```
 
 #8 Find the top 5 counties and bottom 5 countries by GDP per capita in 2014.
-
+#(top 5)
 ```{r}
 gdp_2014 %>% 
  arrange(desc(GDP_Per_Capita)) %>% 
   head()
 ```
-#
+#(bottom 5)
 ```{r}
 gdp_2014 %>% 
  arrange(desc(GDP_Per_Capita)) %>% 
@@ -123,7 +123,7 @@ gdp_2014 %>%
 ```
 
 #9 Now, return to the full dataset, gdp_df. Pivot the data for 1990 and 2018 (using the pandas .pivot_wider() method or another method) so that each row corresponds to a country, each column corresponds to a year, and the values in the table give the GDP_Per_Capita amount. Drop any rows that are missing values for either 1990 or 2018. Save the result to a dataframe named gdp_pivoted.
-
+# (below)
 ```{r}
 gdp_pivoted <- gdp_df %>%
   filter(Year == 1990 | Year == 2018) %>% 
@@ -142,13 +142,65 @@ gdp_pivoted
 ```
 
 #11 How many countries experienced a negative percent change in GDP per capita from 1990 to 2018?
+(17. answer below!)
 
 ```{r}
 gdp_pivoted %>% 
   filter(Percent_Change < 0)
 ```
 
+
+```{r}
+gdp_pivoted %>% 
+  filter(Percent_Change < 0) %>% 
+  count()
+```
+
 #12 Which country had the highest % change in GDP per capita? Create a line plot showing these country's GDP per capita for all years for which you have data. Put both line charts on the same plot.
+(Highest change in GDP Per Capita)
+```{r}
+max_eq_guinea<- gdp_pivoted %>% 
+  filter(Percent_Change == max(Percent_Change))
+max_eq_guinea
+```
+```{r}
+eq_guinea <- gdp_df %>% 
+  filter(Country == 'Equatorial Guinea')
+eq_guinea
+```
+(Here is the line plot for EQ_Guinea)
+```{r}
+ggplot(eq_guinea, aes(x=Year, y =GDP_Per_Capita))+
+  geom_line() +
+  ggtitle("Equatorial Guinea")
+
+```
+```{r}
+combined_data<-gdp_pivoted%>% 
+  arrange(desc(Percent_Change)) %>% 
+  head(2)
+combined_data
+```
+
+```{r}
+China_df <- gdp_df %>% 
+  filter(Country == "China") 
+
+ggplot(China_df, aes(x=Year, y =GDP_Per_Capita)) +
+  geom_line() +
+  ggtitle("China GDP!")
+```
+
+```{r}
+china <- filter(gdp_df, Country=='China')
+eq_guinea2 <- filter(gdp_df, Country=='Equatorial Guinea')
+combined_data2 <- rbind(china, eq_guinea2)
+ggplot() +
+  geom_line(data=china, aes(x=Year, y =GDP_Per_Capita, color='red', title='China')) +
+  geom_line(data=eq_guinea2, aes(x=Year, y =GDP_Per_Capita, color='blue', title='EQ Guinea!')) +
+  ggtitle("Combined Data, Red=China and Blue =EQ Guinea")
+```
+
 
 Read in continents.csv contained in the data folder into a new dataframe called continents. We will be using this dataframe to add a new column to our dataset.
 
