@@ -43,13 +43,6 @@ gdp_df
 
 #3 Which years are represented in this dataset?(1990 to 2020) How many observations are there per year? (242) Make a plot to view the number of observations per year.
 
-#mariels code
-```{r}
-gdp_df
-  unique(Year)
-```
-
-
 #robs code/alernate
 ```{r}
 countries_by_year<-gdp_df |> 
@@ -201,29 +194,41 @@ ggplot() +
   ggtitle("Combined Data, Red=China and Blue =EQ Guinea")
 ```
 
+#13 Read in continents.csv contained in the data folder into a new dataframe called continents. We will be using this dataframe to add a new column to our dataset.
 
-Read in continents.csv contained in the data folder into a new dataframe called continents. We will be using this dataframe to add a new column to our dataset.
+```{r}
+continents_df <- read_csv('./data/continents.csv')
+```
 
-Merge gdp_df and continents. Keep only the countries that appear in both data frames. Save the result back to gdp_df.
+#13 Merge gdp_df and continents. Keep only the countries that appear in both data frames. Save the result back to gdp_df.
 
-Determine the number of countries per continent. Create a bar chart showing this.
+```{r}
+gdp_df  <- merge(gdp_df, continents_df, by='Country')
+gdp_df
+```
 
-Create a boxplot showing GDP per capita in 2018 split out by continent. What do you notice?
+#14 Determine the number of countries per continent. Create a bar chart showing this.
 
-Read life_expectancy.csv into a tibble named life_expectancy. Do not modify the csv file in order to read this data in.
+```{r}
 
-Drop the Country Code, Indicator Name, and Indicator Code columns. Then use pivot_longer to convert your data from wide to long. That is, instead of having one row per country and multiple colums per year, we want to have multiple rows per country and a single column for year. After melting, rename the columns to Country, Year, and Life_Expectancy.
+```
 
-What was the first country with a life expectancy to exceed 80?
+#15 Create a boxplot showing GDP per capita in 2018 split out by continent. What do you notice?
 
-Merge gdp_df and life_expectancy, keeping all countries and years that appear in both DataFrames. Save the result to a new DataFrame named gdp_le. If you get any errors in doing this, read them carefully and correct them. Look at the first five rows of your new data frame to confirm it merged correctly. Also, check the last five rows to make sure the data is clean and as expected.
+#16 Read life_expectancy.csv into a tibble named life_expectancy. Do not modify the csv file in order to read this data in.
 
-Create a new DataFrame, named gdp_le_2019 by extracting data for the year 2019 from gdp_le. How many countries have a life expectancy of at least 80 in 2019?
+#17 Drop the Country Code, Indicator Name, and Indicator Code columns. Then use pivot_longer to convert your data from wide to long. That is, instead of having one row per country and multiple colums per year, we want to have multiple rows per country and a single column for year. After melting, rename the columns to Country, Year, and Life_Expectancy.
 
-Find the countries that had the top 3 largest GDP per capita figures for 2019. Create a plot showing the change in life expectancy over time for these three countries. This plot should be faceted so that each country is contained in its own figure.
+#18 What was the first country with a life expectancy to exceed 80?
 
-Create a scatter plot of Life Expectancy vs GDP per Capita for the year 2019. What do you notice?
+#19 Merge gdp_df and life_expectancy, keeping all countries and years that appear in both DataFrames. Save the result to a new DataFrame named gdp_le. If you get any errors in doing this, read them carefully and correct them. Look at the first five rows of your new data frame to confirm it merged correctly. Also, check the last five rows to make sure the data is clean and as expected.
 
-Find the correlation between Life Expectancy and GDP per Capita for the year 2019. What is the meaning of this number?
+#20 Create a new DataFrame, named gdp_le_2019 by extracting data for the year 2019 from gdp_le. How many countries have a life expectancy of at least 80 in 2019?
 
-Add a column to gdp_le_2019 and calculate the logarithm of GDP per capita. Find the correlation between the log of GDP per capita and life expectancy. How does this compare to the calculation in the previous part? Look at a scatter plot to see if the result of this calculation makes sense.
+#21 Find the countries that had the top 3 largest GDP per capita figures for 2019. Create a plot showing the change in life expectancy over time for these three countries. This plot should be faceted so that each country is contained in its own figure.
+
+#22 Create a scatter plot of Life Expectancy vs GDP per Capita for the year 2019. What do you notice?
+
+#23 Find the correlation between Life Expectancy and GDP per Capita for the year 2019. What is the meaning of this number?
+
+#24 Add a column to gdp_le_2019 and calculate the logarithm of GDP per capita. Find the correlation between the log of GDP per capita and life expectancy. How does this compare to the calculation in the previous part? Look at a scatter plot to see if the result of this calculation makes sense.
