@@ -222,16 +222,62 @@ str(continent_bar)
 
 
 ```{r}
-ggplot(continent_bar, aes(x=Continent, y=CountryCount)) +
-  geom_bar(stat = 'identity')
-  
+ggplot(continent_bar, aes(x=Continent, y=CountryCount, fill=Continent)) +
+  geom_bar(stat = 'identity') +
+  ggtitle("Count of Continent by Country")
 ```
 
 #15 Create a boxplot showing GDP per capita in 2018 split out by continent. What do you notice?
 
-#16 Read life_expectancy.csv into a tibble named life_expectancy. Do not modify the csv file in order to read this data in.
+```{r}
+gdp_2018 <- gdp_df %>% 
+  filter(Year == 2018) 
+gdp_2018
+```
+
+```{r}
+ggplot(gdp_2018, aes(x=Continent, y=GDP_Per_Capita, fill=Continent)) +
+  geom_boxplot()
+```
+
+#16 Read life_expectancy.csv into a tibble named life_expectancy. Do not modify the csv file in 
+order to read this data in.
+
+```{r}
+life_expectancy<-read_csv('./data/life_expectancy.csv', skip=3)
+```
+```{r}
+life_expectancy
+  head()
+```
 
 #17 Drop the Country Code, Indicator Name, and Indicator Code columns. Then use pivot_longer to convert your data from wide to long. That is, instead of having one row per country and multiple colums per year, we want to have multiple rows per country and a single column for year. After melting, rename the columns to Country, Year, and Life_Expectancy.
+
+#three columns dropped
+```{r}
+#life_expectancy<-life_expectancy[-c(2,3,4)]
+#life_expectancy
+```
+```{r}
+#life_expectancy <- life_expectancy[-c(64,65)]
+life_expectancy
+```
+
+
+...final result: multiple rows per country and a single column for year..(Done!) 
+```{r}
+#life_expectancy %>% 
+# pivot_longer(cols=2:63)
+life_expectancy <- life_expectancy %>% 
+  rename(Country = 'Country Name', Year=name, Life_Expectancy = value)
+```
+
+(Done!)
+```{r}
+life_expectancy
+  head()
+```
+
 
 #18 What was the first country with a life expectancy to exceed 80?
 
