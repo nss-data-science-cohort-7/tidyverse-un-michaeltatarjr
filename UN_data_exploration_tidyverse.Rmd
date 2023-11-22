@@ -255,22 +255,27 @@ life_expectancy
 
 #three columns dropped
 ```{r}
-#life_expectancy<-life_expectancy[-c(2,3,4)]
-#life_expectancy
+life_expectancy<-life_expectancy[-c(2,3,4)]
+life_expectancy
 ```
 ```{r}
-#life_expectancy <- life_expectancy[-c(64,65)]
+life_expectancy <- life_expectancy[-c(64,65)]
 life_expectancy
 ```
 
 
 ...final result: multiple rows per country and a single column for year..(Done!) 
 ```{r}
-#life_expectancy %>% 
-# pivot_longer(cols=2:63)
+life_expectancy <- life_expectancy %>% 
+pivot_longer(cols=2:63)
+life_expectancy
+```
+rename the columns to Country, Year, Life_Expectancy
+```{r}
 life_expectancy <- life_expectancy %>% 
   rename(Country = 'Country Name', Year=name, Life_Expectancy = value)
 ```
+
 
 (Done!)
 ```{r}
@@ -281,11 +286,85 @@ life_expectancy
 
 #18 What was the first country with a life expectancy to exceed 80?
 
+#needed to change Year column to a numeric column...
+```{r}
+life_expectancy$Year <- as.numeric(as.character(life_expectancy$Year))
+str(life_expectancy)
+  
+```
+
+#Answer to 18 is below...
+```{r}
+life_expectancy %>% 
+  subset(Life_Expectancy >= 80) %>%  
+  filter(Year == min(Year))
+  
+```
+
 #19 Merge gdp_df and life_expectancy, keeping all countries and years that appear in both DataFrames. Save the result to a new DataFrame named gdp_le. If you get any errors in doing this, read them carefully and correct them. Look at the first five rows of your new data frame to confirm it merged correctly. Also, check the last five rows to make sure the data is clean and as expected.
+
+```{r}
+gdp_le <- merge(gdp_df, life_expectancy)
+
+```
+
+```{r}
+gdp_le %>% 
+  head()
+```
+
+```{r}
+gdp_le %>% 
+  tail()
+```
 
 #20 Create a new DataFrame, named gdp_le_2019 by extracting data for the year 2019 from gdp_le. How many countries have a life expectancy of at least 80 in 2019?
 
+```{r}
+gdp_le_2019 <- gdp_le %>% 
+  filter(Year==2019)
+gdp_le_2019
+```
+#Answer below (34)
+
+```{r}
+gdp_le_2019 %>% 
+  filter(Life_Expectancy >= 80) %>% 
+  count()
+```
+
+```{r}
+gdp_le_2019 %>% 
+  filter(Life_Expectancy >= 80)
+```
+
 #21 Find the countries that had the top 3 largest GDP per capita figures for 2019. Create a plot showing the change in life expectancy over time for these three countries. This plot should be faceted so that each country is contained in its own figure.
+
+```{r}
+combined_2019<- gdp_le_2019%>% 
+  arrange(desc(Life_Expectancy)) %>% 
+  head(3)
+combined_2019
+```
+```{r}
+combined_three<- gdp_le %>% 
+  filter(Country == 'Hong Kong SAR, China' | Country == 'Macao SAR, China' | Country == 'Japan')
+combined_three
+```
+Create a plot showing the change in life expectancy over time for these three countries. This plot should be faceted so that each country is contained in its own figure.
+```{r}
+ggplot(combined_three, aes(x=Year, y=Life_Expectancy, fill=Country)) +
+  geom_point() + 
+  ggtitle("Interesting but not the final answer...")
+facet_grid(cols = 'Country')
+```
+```{r}
+ggplot(combined_three, aes(x=Year, y=Life_Expectancy, fill=Country)) +
+  geom_point() +
+  ggtitle("Interesting but not the final answer...") +
+  facet_grid(cols='Country')
+```
+
 
 #22 Create a scatter plot of Life Expectancy vs GDP per Capita for the year 2019. What do you notice?
 
