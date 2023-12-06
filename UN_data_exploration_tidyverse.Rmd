@@ -22,7 +22,7 @@ gdp_df |>
 
 ```{r}
 gdp_df %>% 
-  tail(10)
+  tail(10) 
 ```
 
 
@@ -38,7 +38,7 @@ gdp_df
 ```{r}
 gdp_df <- gdp_df |> 
   rename(Country = 'Country or Area', GDP_Per_Capita = Value) 
-gdp_df
+gdp_df 
 ```
 
 #3 Which years are represented in this dataset?(1990 to 2020) How many observations are there per year? (242) Make a plot to view the number of observations per year.
@@ -98,7 +98,8 @@ summary(gdp_2014)
 
 ```{r}
 ggplot(gdp_2014, aes(x=GDP_Per_Capita)) +
-  geom_histogram(bin=30) 
+  geom_histogram(bin=20) 
+
 ```
 
 #8 Find the top 5 counties and bottom 5 countries by GDP per capita in 2014.
@@ -106,7 +107,7 @@ ggplot(gdp_2014, aes(x=GDP_Per_Capita)) +
 ```{r}
 gdp_2014 %>% 
  arrange(desc(GDP_Per_Capita)) %>% 
-  head()
+ head()
 ```
 #(bottom 5)
 ```{r}
@@ -212,7 +213,7 @@ gdp_df
 ```{r}
 continent_bar <- gdp_df %>% 
   group_by(Continent) %>% 
-  summarize(CountryCount = n_distinct(Country))
+  summarize(Country_Count = n_distinct(Country))
 continent_bar
 ```
 
@@ -222,7 +223,7 @@ str(continent_bar)
 
 
 ```{r}
-ggplot(continent_bar, aes(x=Continent, y=CountryCount, fill=Continent)) +
+ggplot(continent_bar, aes(x=Continent, y=Country_Count, fill=Continent)) +
   geom_bar(stat = 'identity') +
   ggtitle("Count of Continent by Country")
 ```
@@ -247,7 +248,7 @@ order to read this data in.
 life_expectancy<-read_csv('./data/life_expectancy.csv', skip=3)
 ```
 ```{r}
-life_expectancy
+life_expectancy %>% 
   head()
 ```
 
@@ -267,8 +268,8 @@ life_expectancy
 ...final result: multiple rows per country and a single column for year..(Done!) 
 ```{r}
 life_expectancy <- life_expectancy %>% 
-pivot_longer(cols=2:63)
-life_expectancy
+  pivot_longer(cols=2:63)
+  life_expectancy
 ```
 rename the columns to Country, Year, Life_Expectancy
 ```{r}
@@ -280,16 +281,20 @@ life_expectancy <- life_expectancy %>%
 (Done!)
 ```{r}
 life_expectancy
-  head()
+  head(3)
 ```
 
 
 #18 What was the first country with a life expectancy to exceed 80?
 
-#needed to change Year column to a numeric column...
+#needed to change Year column to a numeric column?
 ```{r}
-life_expectancy$Year <- as.numeric(as.character(life_expectancy$Year))
-str(life_expectancy)
+
+life_expectancy
+  head(3)
+
+#life_expectancy$Year <- as.numeric(as.character(life_expectancy$Year)) 
+#  str(life_expectancy)
   
 ```
 
@@ -359,15 +364,52 @@ ggplot(combined_three, aes(x=Year, y=Life_Expectancy, fill=Country)) +
 facet_grid(cols = 'Country')
 ```
 ```{r}
-ggplot(combined_three, aes(x=Year, y=Life_Expectancy, fill=Country)) +
-  geom_point() +
-  ggtitle("Interesting but not the final answer...") +
-  facet_grid(cols='Country')
+p <- ggplot(combined_three, aes(x=Year, y=Life_Expectancy, fill=Country)) +
+  geom_point() + 
+  ggtitle("Final answer?")
+p + facet_wrap(~Country, ncol = 1)
 ```
 
 
 #22 Create a scatter plot of Life Expectancy vs GDP per Capita for the year 2019. What do you notice?
 
-#23 Find the correlation between Life Expectancy and GDP per Capita for the year 2019. What is the meaning of this number?
+```{r}
 
-#24 Add a column to gdp_le_2019 and calculate the logarithm of GDP per capita. Find the correlation between the log of GDP per capita and life expectancy. How does this compare to the calculation in the previous part? Look at a scatter plot to see if the result of this calculation makes sense.
+ggplot(gdp_le_2019, aes(x=GDP_Per_Capita, y=Life_Expectancy)) +
+  geom_point()
+```
+
+
+#23 Find the correlation between Life Expectancy and GDP per Capita for the year 2019. What is the meaning of this number? (Done! below)
+#Note: Correlation tells us the strength of the linear relationship between two variables. .72 is a pretty strong positive correlation
+```{r}
+cor(gdp_le_2019$GDP_Per_Capita, gdp_le_2019$Life_Expectancy,  method = "pearson", use = "complete.obs")
+
+```
+
+
+#24 Add a column to gdp_le_2019 and calculate the logarithm of GDP per capita. (DONE!)
+Find the correlation between the log of GDP per capita and life expectancy. How does this compare to the calculation in the previous part? (Done! Its higher!)  Look at a scatter plot to see if the result of this calculation makes sense.
+
+```{r}
+
+gdp_le_2019$log_of_gdp <- log(gdp_le_2019$GDP_Per_Capita, base = 10)
+  gdp_le_2019
+```
+(Done! Its higher!)
+```{r}
+cor(gdp_le_2019$log_of_gdp, gdp_le_2019$Life_Expectancy,  method = "pearson", use = "complete.obs")
+```
+```{r}
+ggplot(gdp_le_2019, aes(x=log_of_gdp, y=Life_Expectancy)) +
+  geom_point()
+
+```
+(Done! Scatterplot above!)
+
+
+
+
+
+
+
